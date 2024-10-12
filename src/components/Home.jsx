@@ -1,9 +1,21 @@
 import { Header } from "./Header";
 import { CardPizza } from "./CardPizza";
-import { pizzas } from "../assets/js/pizzas.js";
+import { useEffect, useState } from "react";
 
 export function Home() {
-  const mapPizzas = pizzas.map((pizza) => {
+  const [pizzasApi, setPizzasApi] = useState([]);
+
+  const getPizzas = async () => {
+    const resPizzas = await fetch("http://localhost:5000/api/pizzas");
+    const pizzasResponse = await resPizzas.json();
+    setPizzasApi(pizzasResponse);
+  };
+
+  useEffect(() => {
+    getPizzas();
+  }, []);
+
+  const mapPizzas = pizzasApi.map((pizza) => {
     return <CardPizza key={pizza.id} pizzaInfo={pizza} cartButton={false} />;
   });
 
